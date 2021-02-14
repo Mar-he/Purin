@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useReducer } from 'react';
+import { Button } from 'antd';
+import styles from './App.module.css';
+import { Layout } from 'antd'
+import Search from './components/Search/Search'
+import { SearchProvider, InitialState } from './context/SearchContext'
+import SearchReducer from './reducer/SearchReducer'
+import FoodList from './components/FoodList/FoodList'
+
+const { Header, Content, Footer } = Layout
 
 function App() {
+  const [state, dispatch] = useReducer(SearchReducer, InitialState)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Layout className={styles.layout}>
+        <Header>Purin.io</Header>
+        <Content>
+          <SearchProvider value={{ state, dispatch }}>
+            <Search></Search>
+            <FoodList></FoodList>
+          </SearchProvider>
+        </Content>
+        <Footer className={styles.footer} style={{ textAlign: "center" }}>
+          Purin.io
+        </Footer>
+      </Layout>
+    </>
   );
 }
 
