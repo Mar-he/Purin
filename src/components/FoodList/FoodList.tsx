@@ -1,19 +1,43 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SearchContext } from '../../context/SearchContext'
-import { Table, Row, Col, InputNumber } from 'antd'
-import useTableData from '../../hooks/useTableData'
+import { Table, Row, Col, InputNumber, Result } from 'antd'
+import useFoodData from '../../hooks/useFoods'
 import { TableFoodType } from '../../data'
-import { EditableRow } from './EditableRow'
-import { EditableCell } from './EditableCell'
+import { DeleteOutlined } from '@ant-design/icons'
 
+import styles from './FoodList.module.css'
+import { colorIndicator } from '../../utils'
 const FoodList = (e) => {
 
-    const { tableData, setTableData } = useTableData()
+    const { foods, setFoods } = useFoodData()
+    const [isEmpty, setIsEmpty] = useState(true)
+
+    useEffect(() => {
+        setIsEmpty(foods.length ? false : true)
+    }, [foods])
+
     const columns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            render: (text, record) => {
+                let color = colorIndicator(record.harn)
+                return {
+
+                    props: {
+                        style: {
+                            background: `linear-gradient(90deg, ${color} 0%, ${color} 2%, #fff 2%, #fff 100%)`
+                        }
+                    },
+                    children: <div> {text}</div>
+                }
+            }
+        },
+        {
+            title: 'Art',
+            dataIndex: 'kind',
+            key: 'kind',
         },
         {
             title: 'Kategorie',
@@ -38,13 +62,26 @@ const FoodList = (e) => {
                         onChange={newValue => {
                             if (newValue) {
                                 const number = typeof newValue === "string" ? parseFloat(newValue) : newValue
-                                setTableData(tableData.map((opt, i) => i === index ? { ...record, amount: number } : opt))
+                                setFoods(foods.map((opt, i) => i === index ? { ...record, amount: number } : opt))
                             }
                         }}
                     />
                 )
             }
+        },
+        {
+            render: (text, record, idx) => {
+                return (
+                    <DeleteOutlined
+                        onClick={e => {
+                            console.log(e, text, record, idx)
+                            setFoods(foods.filter((opt, i) => opt.key !== record.key))
+                        }}
+                    />
+                )
+            }
         }
+
     ]
 
     const summary = (data: readonly TableFoodType[]) => {
@@ -65,13 +102,19 @@ const FoodList = (e) => {
     return (
 
         <>
-            <Row gutter={[0, 16]}>
+            {isEmpty && <Result status={"info"}
+                title="Wählen Sie die gewünschten Lebensmittel über die Suche, um mit der Berechnung der Putinwerte zu beginnen."
+
+            />
+            }
+            <Row gutter={[0, 16]} style={{ display: isEmpty ? 'none' : 'block' }}>
                 <Col span={24}>
 
                     <Table
+                        key={"key"}
                         pagination={false}
                         bordered={false}
-                        dataSource={tableData   }
+                        dataSource={foods}
                         columns={columns}
                         summary={(data) => summary(data)}
                     >

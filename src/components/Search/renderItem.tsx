@@ -1,19 +1,22 @@
 import { TagsTwoTone } from '@ant-design/icons';
+import { TableFoodType } from '../../data';
+import { colorIndicator } from '../../utils'
 
 
-const renderItem = (title, harn) => {
+const renderItem = (item: TableFoodType) => {
+    const hasKind = item["kind"].length > 0
+    const color = colorIndicator(item.harn)
     return {
-        value: title,
+        value: `${item.key} ${item.name}`,
         label: (
             <div
                 style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
                 }}
             >
-                {title}
+                {item.key} {item.name} {hasKind ? `(${item.kind})` : ""}
                 <span>
-                    <TagsTwoTone twoToneColor="#1DA57A" /> {harn}
+                    <TagsTwoTone twoToneColor={color} /> {item.harn}
                 </span>
             </div>
         ),
