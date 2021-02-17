@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom'
 import {
     DesktopOutlined,
     PieChartOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
+    GithubOutlined
 } from '@ant-design/icons';
 const LayoutSider = props => {
     const { Sider } = Layout
@@ -28,11 +26,13 @@ const LayoutSider = props => {
                         Übersicht</Link>
                 </Menu.Item>
                 <Menu.Item key="2" icon={<DesktopOutlined />}>
-                <Link to="/impressum">
+                    <Link to="/impressum">
                         Datenschutz</Link>
-            </Menu.Item>
-
-
+                </Menu.Item>
+                <Menu.Item key="3" icon={<GithubOutlined />}>
+                    <a target="_blank" href="https://github.com/Servellia/Purin">
+                        Github</a>
+                </Menu.Item>
             </Menu>
         </Sider>
     )
