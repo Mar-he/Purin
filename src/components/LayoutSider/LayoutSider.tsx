@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Layout, Menu, } from 'antd'
+import { Link } from 'react-router-dom'
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -23,10 +24,12 @@ const LayoutSider = props => {
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                 <Menu.Item key="1" icon={<PieChartOutlined />}>
-                    Übersicht
-            </Menu.Item>
+                    <Link to="/">
+                        Übersicht</Link>
+                </Menu.Item>
                 <Menu.Item key="2" icon={<DesktopOutlined />}>
-                    Datenschutz
+                <Link to="/impressum">
+                        Datenschutz</Link>
             </Menu.Item>
 
 
