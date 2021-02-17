@@ -1,5 +1,5 @@
 import Search from 'antd/lib/transfer/search'
-import React from 'react'
+import React, { createContext } from 'react'
 import { FoodType } from '../data'
 
 
@@ -12,7 +12,7 @@ export const InitialState: InitialStateType = {
     foods: []
 }
 
-const SearchContext = React.createContext<{
+export const SearchContext = createContext<{
     state: InitialStateType,
     dispatch: React.Dispatch<any>
 }>({
@@ -20,6 +20,4 @@ const SearchContext = React.createContext<{
     dispatch: () => null
 })
 
-const SearchProvider = SearchContext.Provider
-
-export { SearchContext, SearchProvider }
+export const SearchProvider = SearchContext.Provider

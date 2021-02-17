@@ -1,7 +1,6 @@
-import { type } from 'os'
 import React, { useContext, useEffect, useState } from 'react'
 import { SearchContext } from '../context/SearchContext'
-import { data, TableFoodType } from '../data'
+import { TableFoodType } from '../data'
 
 const useFoods = () => {
 
@@ -11,8 +10,7 @@ const useFoods = () => {
     useEffect(() => {
         const mappedStateData = state.foods.map(itm => {
             return {
-                ...itm,
-                amount: 100
+                ...itm
             } as TableFoodType
         })
 
@@ -20,12 +18,9 @@ const useFoods = () => {
 
     }, [state])
 
-    const setFoods = (e) => {
-        console.log("setFoods called inside useFoods hook ", e)
+    const setFoods = (e: TableFoodType[]) => {
         //update foods state via dispatch in Context
-        dispatch({ type: 'SET_FOOD', foods: e})
-        //update the state
-        setFoodData(e)
+        dispatch({ type: 'SET_FOOD', foods: e })
     }
 
     return { foods, setFoods }

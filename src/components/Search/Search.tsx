@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Input, AutoComplete, Row, Col } from 'antd'
 import styles from './Search.module.css'
-import { data, FoodType } from '../../data'
 import renderCategory from './renderCategory'
 import renderItem from './renderItem'
 import { SearchContext } from '../../context/SearchContext'
+import useSearchData from '../../hooks/useSearchData'
+import { FoodType } from '../../data'
 
 const Search = () => {
 
     const [options, setOptions] = useState<any[]>([])
-
+    const { foods } = useSearchData()
     const { state, dispatch } = useContext(SearchContext)
 
     const groupBy = (xs, key) => {
@@ -20,7 +21,7 @@ const Search = () => {
     };
 
     const queryData = (e: string): FoodType[] => {
-        return data
+        return foods
             .filter(d => {
                 return e === ""
                     ? true
@@ -28,7 +29,7 @@ const Search = () => {
             });
     }
 
-    const queryDataByKey = (e: number): FoodType => data.find(x => x.key == e);
+    const queryDataByKey = (e: number): FoodType => foods.find(x => x.key == e);
 
 
     const groupData = (data: FoodType[]) => {
@@ -63,7 +64,7 @@ const Search = () => {
         let regexp = /^(\d+\s)(.*)/
         let key = +(regexp.exec(o.value)[1])
         var item = queryDataByKey(key)
-        
+
         //if the item is already in the array we do nothing
         if (!state.foods.some(x => x.key == item.key)) {
             dispatch({ type: 'ADD_FOOD', foods: [item] })

@@ -1,11 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { SearchContext } from '../../context/SearchContext'
 import { Table, Row, Col, InputNumber, Result } from 'antd'
 import useFoodData from '../../hooks/useFoods'
-import { TableFoodType } from '../../data'
 import { DeleteOutlined } from '@ant-design/icons'
-
-import styles from './FoodList.module.css'
+import SummaryRow from './SummaryRow'
 import { colorIndicator } from '../../utils'
 const FoodList = (e) => {
 
@@ -13,6 +10,7 @@ const FoodList = (e) => {
     const [isEmpty, setIsEmpty] = useState(true)
 
     useEffect(() => {
+        console.log("foods changed in table: ", foods)
         setIsEmpty(foods.length ? false : true)
     }, [foods])
 
@@ -55,14 +53,19 @@ const FoodList = (e) => {
             render: (text, record, index) => {
                 return (
                     <InputNumber
-                        defaultValue={record.amount}
+                        defaultValue={record.portionG}
                         min={0}
                         formatter={value => `${value}g`}
                         parser={value => value?.replace('g', '') || 0}
                         onChange={newValue => {
-                            if (newValue) {
-                                const number = typeof newValue === "string" ? parseFloat(newValue) : newValue
-                                setFoods(foods.map((opt, i) => i === index ? { ...record, amount: number } : opt))
+                            //if there is a new numeric value, we recalculate the new "amount" of the record and set it
+                            if (newValue || newValue === 0) {
+                                const number = typeof newValue === "string"
+                                    ? parseFloat(newValue)
+                                    : newValue
+                                let newFoods = foods.map((opt, i) => i === index ? { ...record, amount: number } : opt)
+                                console.log("newFoods: ", newFoods)
+                                setFoods(newFoods)
                             }
                         }}
                     />
@@ -74,7 +77,6 @@ const FoodList = (e) => {
                 return (
                     <DeleteOutlined
                         onClick={e => {
-                            console.log(e, text, record, idx)
                             setFoods(foods.filter((opt, i) => opt.key !== record.key))
                         }}
                     />
@@ -84,23 +86,8 @@ const FoodList = (e) => {
 
     ]
 
-    const summary = (data: readonly TableFoodType[]) => {
-        let totalHarn: number = 0
-        data.forEach(({ harn, amount }) => {
-            totalHarn += harn * (amount / 100)
-        })
-        return (
-            <Table.Summary.Row>
-                <Table.Summary.Cell index={0}><span>Gesamt Harnsäure in mg: </span></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}>
-                    {totalHarn}
-                </Table.Summary.Cell>
-            </Table.Summary.Row>
-        )
-    }
 
     return (
-
         <>
             {isEmpty && <Result status={"info"}
                 title="Wählen Sie die gewünschten Lebensmittel über die Suche, um mit der Berechnung der Putinwerte zu beginnen."
@@ -116,7 +103,7 @@ const FoodList = (e) => {
                         bordered={false}
                         dataSource={foods}
                         columns={columns}
-                        summary={(data) => summary(data)}
+                        summary={(data) => SummaryRow(data)}
                     >
 
                     </Table>
