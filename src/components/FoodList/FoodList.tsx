@@ -91,7 +91,6 @@ const FoodList = (e) => {
         <>
             {isEmpty && <Result status={"info"}
                 title="Wählen Sie die gewünschten Lebensmittel über die Suche, um mit der Berechnung der Putinwerte zu beginnen."
-
             />
             }
             <Row gutter={[0, 16]} style={{ display: isEmpty ? 'none' : 'block' }}>

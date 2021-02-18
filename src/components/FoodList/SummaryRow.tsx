@@ -11,7 +11,7 @@ const SummaryRow = (data: readonly TableFoodType[]) => {
         let harnTotal = data.reduce((prev, curr) => {
             return prev + curr.harn * curr.amount / 100
         }, 0)
-        setLocalTotal(+(harnTotal * 100 / 500).toFixed(0))
+        setLocalTotal(+harnTotal.toFixed(2))
     }, [data])
 
 
@@ -24,7 +24,7 @@ const SummaryRow = (data: readonly TableFoodType[]) => {
             <Table.Summary.Cell index={2} colSpan={4}>
                 <Progress
                     status="exception"
-                    percent={localTotal}
+                    percent={localTotal * 100 / 500}
                 >
                 </Progress>
             </Table.Summary.Cell>
